@@ -4,8 +4,8 @@
   "description": "Polling App feat. ReactJS, Node.js, Express, and Socket.io",
   "main": "index.js",
   "scripts": {
+    "prestart": "webpack",
     "start": "nodemon app-server.js",
-    "build": "webpack --config --watch webpack.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,6 +24,8 @@
     "bootstrap": "^3.3.7",
     "express": "^4.14.0",
     "react": "^15.4.1",
+    "socket.io": "^1.7.2",
+    "socket.io-client": "^1.7.2",
     "webpack": "^1.14.0"
   }
 }
