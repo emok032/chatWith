@@ -21506,30 +21506,43 @@
 	var App = function (_React$Component) {
 		_inherits(App, _React$Component);
 
-		function App() {
+		// (1) Load App >> (2) Connect to Socket
+		function App(props) {
 			_classCallCheck(this, App);
 
-			return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+			// App initial state of: disconnected
+			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+			_this.state = {
+				status: 'disconnected' // To be passed down component <Header> as a property
+			};
+			return _this;
 		}
 
 		_createClass(App, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
+				// Connects to Socket.io
 				this.socket = (0, _socket2.default)('http://localhost:3000');
-				this.socket.on('connect', this.connect);
+				// Initiates connection callback
+				this.socket.on('connect', this.connect.bind(this));
 			}
 		}, {
 			key: 'connect',
 			value: function connect() {
-				console.log("Connected: " + this.socket.id);
+				// Update state: status to 'conncted'
+				this.setState({ status: 'connected' });
 			}
+
+			// Passing the 
+
 		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_header2.default, { title: 'New Header' })
+					_react2.default.createElement(_header2.default, { title: 'New Header', status: this.state.status })
 				);
 			}
 		}]);
@@ -30232,7 +30245,7 @@
 /* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -30258,15 +30271,24 @@
 		}
 
 		_createClass(Header, [{
-			key: 'render',
+			key: "render",
 			value: function render() {
 				return _react2.default.createElement(
-					'header',
-					null,
+					"header",
+					{ className: "row" },
 					_react2.default.createElement(
-						'h1',
-						null,
-						this.props.title
+						"div",
+						{ className: "col-x-10" },
+						_react2.default.createElement(
+							"h1",
+							null,
+							this.props.title
+						)
+					),
+					_react2.default.createElement(
+						"div",
+						{ className: "col-xs-2" },
+						_react2.default.createElement("span", { id: "connection-status", className: this.props.status })
 					)
 				);
 			}
@@ -30279,6 +30301,10 @@
 
 	Header.propTypes = {
 		title: _react2.default.PropTypes.string.isRequired
+	};
+	// <Header> will take property: status
+	Header.defaultProps = {
+		status: 'disconnected'
 	};
 
 	module.exports = Header;
