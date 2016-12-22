@@ -21501,7 +21501,7 @@
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } // App - Will handle entire application's state
 
 	var App = function (_React$Component) {
 		_inherits(App, _React$Component);
@@ -21514,7 +21514,8 @@
 			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 			_this.state = {
-				status: 'disconnected' // To be passed down component <Header> as a property
+				status: 'disconnected', // To be passed down component <Header> as a property
+				title: ''
 			};
 			return _this;
 		}
@@ -21528,6 +21529,8 @@
 				this.socket.on('connect', this.connect.bind(this));
 				// Disconnects from Socket
 				this.socket.on('disconnect', this.disconnect.bind(this));
+				// Emit 
+				this.socket.on('welcome', this.welcome.bind(this));
 			}
 			// Connect (handler)
 
@@ -21544,16 +21547,20 @@
 			value: function disconnect() {
 				this.setState({ status: 'disconnected' });
 			}
+			// Emit 'welcome' (handler)
 
-			// Passing the 
-
+		}, {
+			key: 'welcome',
+			value: function welcome(serverState) {
+				this.setState({ title: serverState.title });
+			}
 		}, {
 			key: 'render',
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_header2.default, { title: 'Connection (Header)', status: this.state.status })
+					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status })
 				);
 			}
 		}]);

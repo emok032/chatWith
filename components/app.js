@@ -1,3 +1,5 @@
+// App - Will handle entire application's state
+
 import React from 'react';
 import io from 'socket.io-client';
 import Header from './parts/header';
@@ -8,7 +10,8 @@ class App extends React.Component {
 		super(props);
 		// App initial state of: disconnected
 		this.state = {
-			status: 'disconnected' // To be passed down component <Header> as a property
+			status: 'disconnected', // To be passed down component <Header> as a property
+			title: ''
 		};
 	}
 
@@ -19,6 +22,8 @@ class App extends React.Component {
 		this.socket.on('connect', this.connect.bind(this));
 		// Disconnects from Socket
 		this.socket.on('disconnect', this.disconnect.bind(this));
+		// Emit 
+		this.socket.on('welcome', this.welcome.bind(this));
 	}
 	// Connect (handler)
 	connect() {
@@ -30,12 +35,15 @@ class App extends React.Component {
 		this.setState({ status: 'disconnected'});
 
 	}
+	// Emit 'welcome' (handler)
+	welcome(serverState) {
+		this.setState({ title: serverState.title });
+	}
 
-	// Passing the 
 	render() {
 		return (
 			<div>
-				<Header title="Connection (Header)" status={this.state.status}/>
+				<Header title={this.state.title} status={this.state.status}/>
 			</div>
 		);
 	}
