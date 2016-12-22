@@ -13,22 +13,29 @@ class App extends React.Component {
 	}
 
 	componentWillMount() {
-		// Connects to Socket.io
+		// Connects to Socket
 		this.socket = io('http://localhost:3000');
 		// Initiates connection callback
 		this.socket.on('connect', this.connect.bind(this));
+		// Disconnects from Socket
+		this.socket.on('disconnect', this.disconnect.bind(this));
 	}
-
+	// Connect (handler)
 	connect() {
 		// Update state: status to 'conncted'
 		this.setState({ status: 'connected' });
+	}
+	// Disconnect (handler)
+	disconnect() {
+		this.setState({ status: 'disconnected'});
+
 	}
 
 	// Passing the 
 	render() {
 		return (
 			<div>
-				<Header title="New Header" status={this.state.status}/>
+				<Header title="Connection (Header)" status={this.state.status}/>
 			</div>
 		);
 	}

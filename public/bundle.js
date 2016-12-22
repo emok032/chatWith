@@ -21522,16 +21522,27 @@
 		_createClass(App, [{
 			key: 'componentWillMount',
 			value: function componentWillMount() {
-				// Connects to Socket.io
+				// Connects to Socket
 				this.socket = (0, _socket2.default)('http://localhost:3000');
 				// Initiates connection callback
 				this.socket.on('connect', this.connect.bind(this));
+				// Disconnects from Socket
+				this.socket.on('disconnect', this.disconnect.bind(this));
 			}
+			// Connect (handler)
+
 		}, {
 			key: 'connect',
 			value: function connect() {
 				// Update state: status to 'conncted'
 				this.setState({ status: 'connected' });
+			}
+			// Disconnect (handler)
+
+		}, {
+			key: 'disconnect',
+			value: function disconnect() {
+				this.setState({ status: 'disconnected' });
 			}
 
 			// Passing the 
@@ -21542,7 +21553,7 @@
 				return _react2.default.createElement(
 					'div',
 					null,
-					_react2.default.createElement(_header2.default, { title: 'New Header', status: this.state.status })
+					_react2.default.createElement(_header2.default, { title: 'Connection (Header)', status: this.state.status })
 				);
 			}
 		}]);
