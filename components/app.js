@@ -1,5 +1,6 @@
 import React from 'react';
 import io from 'socket.io-client';
+import Header from './parts/header';
 
 
 class App extends React.Component {
@@ -15,7 +16,9 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div><h1>Hello, React World</h1></div>
+			<div>
+				<Header title="New Header" />
+			</div>
 		);
 	}
 };
