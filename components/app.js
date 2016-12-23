@@ -1,6 +1,6 @@
 // App - Will handle entire application's state
-
 import React from 'react';
+import { Router, Route, hashHistory } from 'react-router';
 import io from 'socket.io-client';
 import Header from './parts/header';
 
