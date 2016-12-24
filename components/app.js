@@ -14,7 +14,7 @@ class App extends React.Component {
 		this.state = {
 			status: '',
 			title: '',
-			message: []
+			messages: []
 		};
 
 	}
@@ -31,7 +31,7 @@ class App extends React.Component {
 	}
 
 	componentDidMount() {
-		this.socket.emit('test');
+		this.socket.on('receive-message', this.receiveMsg.bind(this));
 	}
 
 	// Connect (handler)
@@ -49,15 +49,33 @@ class App extends React.Component {
 		this.setState({ title: serverState.title });
 	}
 
+	submitMessage(){
+		var message = document.getElementById("message").value;
+		console.log('Sent: ' + message);
+		this.socket.emit('new-message', message);
+	}
+
+	receiveMsg(msg){
+		console.log('Received: ' + msg);
+
+		var {messages} = this.state;
+	      messages.push(msg);
+	      this.setState({messages});
+	}
 	render() {
+
+		var self = this;
 
 		return (
 			<div className="Application">
 				<Header title={this.state.title} status={this.state.status}/>
-				
-				<h1>Chat Window</h1>
+					<ul>
+
+					</ul>	
+				<h1>Chat Input</h1>
 					<form action="">
-						<input type="submit" value="Submit" id="m" autoComplete="off" /><button>Send</button>
+						<input type="text" id="message" autoComplete="off" />
+						<button onClick={ () => self.submitMessage() }>Send</button>
 					</form>
 			</div>
 			

@@ -26460,7 +26460,7 @@
 			_this.state = {
 				status: '',
 				title: '',
-				message: []
+				messages: []
 			};
 
 			return _this;
@@ -26481,7 +26481,7 @@
 		}, {
 			key: 'componentDidMount',
 			value: function componentDidMount() {
-				this.socket.emit('test');
+				this.socket.on('receive-message', this.receiveMsg.bind(this));
 			}
 
 			// Connect (handler)
@@ -26507,25 +26507,47 @@
 				this.setState({ title: serverState.title });
 			}
 		}, {
+			key: 'submitMessage',
+			value: function submitMessage() {
+				var message = document.getElementById("message").value;
+				console.log('Sent: ' + message);
+				this.socket.emit('new-message', message);
+			}
+		}, {
+			key: 'receiveMsg',
+			value: function receiveMsg(msg) {
+				console.log('Received: ' + msg);
+
+				var messages = this.state.messages;
+
+				messages.push(msg);
+				this.setState({ messages: messages });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
+
+				var self = this;
 
 				return _react2.default.createElement(
 					'div',
 					{ className: 'Application' },
 					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
+					_react2.default.createElement('ul', null),
 					_react2.default.createElement(
 						'h1',
 						null,
-						'Chat Window'
+						'Chat Input'
 					),
 					_react2.default.createElement(
 						'form',
 						{ action: '' },
-						_react2.default.createElement('input', { type: 'submit', value: 'Submit', id: 'm', autoComplete: 'off' }),
+						_react2.default.createElement('input', { type: 'text', id: 'message', autoComplete: 'off' }),
 						_react2.default.createElement(
 							'button',
-							null,
+							{ onClick: function onClick() {
+									return self.submitMessage();
+								} },
 							'Send'
 						)
 					)
