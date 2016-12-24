@@ -1,8 +1,10 @@
 // App - Will handle entire application's state
-import React from 'react';
+import React, { Component, cloneElement } from 'react';
 import { Router, Route, hashHistory } from 'react-router';
 import io from 'socket.io-client';
 import Header from './parts/header';
+import Buyers from './Buyers';
+import Seller from './Seller';
 
 class App extends React.Component {
 	// (1) Load App >> (2) Connect to Socket
@@ -42,8 +44,12 @@ class App extends React.Component {
 
 	render() {
 		return (
-			<div>
+
+			<div className="Application">
 				<Header title={this.state.title} status={this.state.status}/>
+				{this.props.children}
+			
+				
 			</div>
 		);
 	}

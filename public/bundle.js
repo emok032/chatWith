@@ -72,15 +72,22 @@
 
 	var _Estate2 = _interopRequireDefault(_Estate);
 
+	var _header = __webpack_require__(288);
+
+	var _header2 = _interopRequireDefault(_header);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	_reactDom2.default.render(_react2.default.createElement(
 		_reactRouter.Router,
 		{ history: _reactRouter.hashHistory },
-		_react2.default.createElement(_reactRouter.Route, { path: '/', component: _app2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/Buyers', component: _Buyers2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/seller', component: _Seller2.default }),
-		_react2.default.createElement(_reactRouter.Route, { path: '/estate', component: _Estate2.default })
+		_react2.default.createElement(
+			_reactRouter.Route,
+			{ path: '/', component: _app2.default },
+			_react2.default.createElement(_reactRouter.Route, { path: 'buyers', component: _Buyers2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'seller', component: _Seller2.default }),
+			_react2.default.createElement(_reactRouter.Route, { path: 'estate', component: _Estate2.default })
+		)
 	), document.getElementById('app'));
 
 /***/ },
@@ -26423,6 +26430,14 @@
 
 	var _header2 = _interopRequireDefault(_header);
 
+	var _Buyers = __webpack_require__(289);
+
+	var _Buyers2 = _interopRequireDefault(_Buyers);
+
+	var _Seller = __webpack_require__(290);
+
+	var _Seller2 = _interopRequireDefault(_Seller);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -26488,8 +26503,8 @@
 			value: function render() {
 				return _react2.default.createElement(
 					'div',
-					null,
-					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status })
+					{ className: 'Application' },
+					this.props.children
 				);
 			}
 		}]);
@@ -35229,6 +35244,7 @@
 						_react2.default.createElement(
 							"h1",
 							null,
+							"Header: ",
 							this.props.title
 						)
 					),
@@ -35291,7 +35307,8 @@
 				return _react2.default.createElement(
 					'h1',
 					null,
-					'Buyers (component)'
+					'Buyers: ',
+					this.props.title
 				);
 			}
 		}]);
@@ -35336,7 +35353,8 @@
 				return _react2.default.createElement(
 					'h1',
 					null,
-					'Seller (component)'
+					'Seller: ',
+					this.props.status
 				);
 			}
 		}]);
