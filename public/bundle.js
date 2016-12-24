@@ -26504,6 +26504,7 @@
 				return _react2.default.createElement(
 					'div',
 					{ className: 'Application' },
+					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
 					this.props.children
 				);
 			}
@@ -35315,6 +35316,8 @@
 
 		return Buyers;
 	}(_react2.default.Component);
+
+	;
 
 	module.exports = Buyers;
 

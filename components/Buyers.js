@@ -7,6 +7,6 @@ class Buyers extends React.Component {
 			<h1>Buyers: {this.props.title}</h1>
 		);
 	}
-}
+};
 
 module.exports = Buyers;
