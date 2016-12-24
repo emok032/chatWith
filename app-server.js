@@ -29,7 +29,7 @@ io.sockets.on('connection', function(socket) { // callback function handling soc
 	});
 
 	socket.on('new-message', function(msg){
-		socket.emit('receive-message', msg);
+		io.emit('receive-message', msg);
 	});
 	socket.on('test', function() {
 		console.log('mounted');

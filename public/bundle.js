@@ -26522,6 +26522,7 @@
 
 				messages.push(msg);
 				this.setState({ messages: messages });
+				console.log({ messages: messages });
 			}
 		}, {
 			key: 'render',

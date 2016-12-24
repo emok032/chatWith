@@ -60,7 +60,8 @@ class App extends React.Component {
 
 		const { messages } = this.state;
 	      messages.push(msg);
-	      this.setState({messages});
+	      this.setState({messages: messages});
+	      console.log({messages});
 	}
 	render() {
 		const { messages } = this.state;
