@@ -58,19 +58,24 @@ class App extends React.Component {
 	receiveMsg(msg){
 		console.log('Received: ' + msg);
 
-		var {messages} = this.state;
+		var { messages } = this.state;
 	      messages.push(msg);
 	      this.setState({messages});
 	}
 	render() {
-
-		var self = this;
+		var { messages } = this.state;
+		const msgList = messages.map((msg, index) =>
+				<li key={index}>
+					{msg}
+				</li>
+		);
+		const self = this;
 
 		return (
 			<div className="Application">
 				<Header title={this.state.title} status={this.state.status}/>
 					<ul>
-
+						Messages: {msgList}
 					</ul>	
 				<h1>Chat Input</h1>
 					<form action="">

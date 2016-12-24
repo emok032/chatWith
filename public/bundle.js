@@ -26526,14 +26526,27 @@
 		}, {
 			key: 'render',
 			value: function render() {
+				var messages = this.state.messages;
 
+				var msgList = messages.map(function (msg, index) {
+					return _react2.default.createElement(
+						'li',
+						{ key: index },
+						msg
+					);
+				});
 				var self = this;
 
 				return _react2.default.createElement(
 					'div',
 					{ className: 'Application' },
 					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
-					_react2.default.createElement('ul', null),
+					_react2.default.createElement(
+						'ul',
+						null,
+						'Messages: ',
+						msgList
+					),
 					_react2.default.createElement(
 						'h1',
 						null,
