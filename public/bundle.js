@@ -26554,13 +26554,11 @@
 					),
 					_react2.default.createElement(
 						'form',
-						{ action: '' },
+						null,
 						_react2.default.createElement('input', { type: 'text', id: 'message', autoComplete: 'off' }),
 						_react2.default.createElement(
 							'button',
-							{ onClick: function onClick() {
-									return self.submitMessage();
-								} },
+							{ onClick: this.submitMessage.bind(this) },
 							'Send'
 						)
 					)

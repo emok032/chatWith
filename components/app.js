@@ -50,7 +50,7 @@ class App extends React.Component {
 	}
 
 	submitMessage(){
-		var message = document.getElementById("message").value;
+		const message = document.getElementById("message").value;
 		console.log('Sent: ' + message);
 		this.socket.emit('new-message', message);
 	}
@@ -58,12 +58,12 @@ class App extends React.Component {
 	receiveMsg(msg){
 		console.log('Received: ' + msg);
 
-		var { messages } = this.state;
+		const { messages } = this.state;
 	      messages.push(msg);
 	      this.setState({messages});
 	}
 	render() {
-		var { messages } = this.state;
+		const { messages } = this.state;
 		const msgList = messages.map((msg, index) =>
 				<li key={index}>
 					{msg}
@@ -78,10 +78,10 @@ class App extends React.Component {
 						Messages: {msgList}
 					</ul>	
 				<h1>Chat Input</h1>
-					<form action="">
+				<form>
 						<input type="text" id="message" autoComplete="off" />
-						<button onClick={ () => self.submitMessage() }>Send</button>
-					</form>
+						<button onClick={ this.submitMessage.bind(this) }>Send</button>
+				</form>
 			</div>
 			
 		);
