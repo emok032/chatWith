@@ -26454,11 +26454,11 @@
 		function App(props) {
 			_classCallCheck(this, App);
 
-			// App initial state of: disconnected
+			// Set App initial/default states:
 			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 			_this.state = {
-				status: 'disconnected', // To be passed down component <Header> as a property
+				status: 'disconnected',
 				title: ''
 			};
 			return _this;
@@ -26501,6 +26501,7 @@
 		}, {
 			key: 'render',
 			value: function render() {
+
 				return _react2.default.createElement(
 					'div',
 					{ className: 'Application' },
@@ -35305,11 +35306,16 @@
 		_createClass(Buyers, [{
 			key: 'render',
 			value: function render() {
+				var _props = this.props,
+				    title = _props.title,
+				    status = _props.status;
+
+
 				return _react2.default.createElement(
 					'h1',
 					null,
 					'Buyers: ',
-					this.props.title
+					this.state.title
 				);
 			}
 		}]);

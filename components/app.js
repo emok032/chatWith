@@ -10,9 +10,9 @@ class App extends React.Component {
 	// (1) Load App >> (2) Connect to Socket
 	constructor(props){
 		super(props);
-		// App initial state of: disconnected
+		// Set App initial/default states:
 		this.state = {
-			status: 'disconnected', // To be passed down component <Header> as a property
+			status: 'disconnected',
 			title: ''
 		};
 	}
@@ -43,14 +43,14 @@ class App extends React.Component {
 	}
 
 	render() {
+		
 		return (
-
 			<div className="Application">
 				<Header title={this.state.title} status={this.state.status}/>
 				{this.props.children}
-			
 				
 			</div>
+			
 		);
 	}
 };
