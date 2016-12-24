@@ -17,7 +17,7 @@ class Header extends React.Component {
 };
 
 Header.propTypes = {
-	title: React.PropTypes.string.isRequired
+	title: React.PropTypes.string
 };
 // <Header> will take property: status
 Header.defaultProps = {

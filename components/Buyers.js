@@ -1,12 +1,25 @@
-import React, { Component } from 'react';
+import React from 'react';
 
 class Buyers extends React.Component {
 
 	render() {
-		const { title, status } = this.props;
 
+		const socket = io();
+		
+			$('form').submit(function(){
+				socket.emit('chat message', $('#m').va());
+				$('#m').val('');
+				return false;
+			});
 		return (
-			<h1>Buyers: {this.state.title}</h1>
+			
+
+			<div>
+				<h1>Buyers: {this.props.title}</h1>
+				<form action="">
+					<input id="m" autoComplete="off" /><button>Send</button>
+				</form>
+			</div>
 		);
 	}
 };

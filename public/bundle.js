@@ -26458,9 +26458,11 @@
 			var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 			_this.state = {
-				status: 'disconnected',
-				title: ''
+				status: '',
+				title: '',
+				message: []
 			};
+
 			return _this;
 		}
 
@@ -26476,6 +26478,12 @@
 				// Emit 
 				this.socket.on('welcome', this.welcome.bind(this));
 			}
+		}, {
+			key: 'componentDidMount',
+			value: function componentDidMount() {
+				this.socket.emit('test');
+			}
+
 			// Connect (handler)
 
 		}, {
@@ -26506,7 +26514,21 @@
 					'div',
 					{ className: 'Application' },
 					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
-					this.props.children
+					_react2.default.createElement(
+						'h1',
+						null,
+						'Chat Window'
+					),
+					_react2.default.createElement(
+						'form',
+						{ action: '' },
+						_react2.default.createElement('input', { type: 'submit', value: 'Submit', id: 'm', autoComplete: 'off' }),
+						_react2.default.createElement(
+							'button',
+							null,
+							'Send'
+						)
+					)
 				);
 			}
 		}]);
@@ -35265,7 +35287,7 @@
 	;
 
 	Header.propTypes = {
-		title: _react2.default.PropTypes.string.isRequired
+		title: _react2.default.PropTypes.string
 	};
 	// <Header> will take property: status
 	Header.defaultProps = {
@@ -35306,16 +35328,33 @@
 		_createClass(Buyers, [{
 			key: 'render',
 			value: function render() {
-				var _props = this.props,
-				    title = _props.title,
-				    status = _props.status;
 
+				var socket = io();
 
+				$('form').submit(function () {
+					socket.emit('chat message', $('#m').va());
+					$('#m').val('');
+					return false;
+				});
 				return _react2.default.createElement(
-					'h1',
+					'div',
 					null,
-					'Buyers: ',
-					this.state.title
+					_react2.default.createElement(
+						'h1',
+						null,
+						'Buyers: ',
+						this.props.title
+					),
+					_react2.default.createElement(
+						'form',
+						{ action: '' },
+						_react2.default.createElement('input', { id: 'm', autoComplete: 'off' }),
+						_react2.default.createElement(
+							'button',
+							null,
+							'Send'
+						)
+					)
 				);
 			}
 		}]);

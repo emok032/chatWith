@@ -12,9 +12,11 @@ class App extends React.Component {
 		super(props);
 		// Set App initial/default states:
 		this.state = {
-			status: 'disconnected',
-			title: ''
+			status: '',
+			title: '',
+			message: []
 		};
+
 	}
 
 	componentWillMount() {
@@ -25,8 +27,13 @@ class App extends React.Component {
 		// Disconnects from Socket
 		this.socket.on('disconnect', this.disconnect.bind(this));
 		// Emit 
-		this.socket.on('welcome', this.welcome.bind(this));
+		this.socket.on('welcome', this.welcome.bind(this));	
 	}
+
+	componentDidMount() {
+		this.socket.emit('test');
+	}
+
 	// Connect (handler)
 	connect() {
 		// Update state: status to 'conncted'
@@ -43,12 +50,15 @@ class App extends React.Component {
 	}
 
 	render() {
-		
+
 		return (
 			<div className="Application">
 				<Header title={this.state.title} status={this.state.status}/>
-				{this.props.children}
 				
+				<h1>Chat Window</h1>
+					<form action="">
+						<input type="submit" value="Submit" id="m" autoComplete="off" /><button>Send</button>
+					</form>
 			</div>
 			
 		);

@@ -4,7 +4,7 @@ var app = express();
 
 // Tracking Socket (Connection)
 var connections = [];
-var title = 'Real Estate Property title placeholder';
+var title = 'title placeholder';
 
 // Middleware ========================================================================================
 app.use(express.static('./public')); // serve files from static folder ('public')
@@ -27,6 +27,13 @@ io.sockets.on('connection', function(socket) { // callback function handling soc
 		// Connections left
 		console.log('Disconnected: %s sockets still connected', connections.length);
 	});
+
+	socket.on('chat message', function(msg){
+		socket.emit('receive message', msg);
+	});
+	socket.on('test', function() {
+		console.log('mounted');
+	})
 
 	// Emit event 'welcome' --------------------------------------------------------------------------
 	socket.emit('welcome', {
