@@ -37,11 +37,7 @@ class App extends React.Component {
 		this.socket.on('online-user', this.onlineUser.bind(this));
 	}
 
-	shouldComponentUpdate(nextProps, nextState) {
-		return true
-	}
-
-	componentWillUpdate() {
+	componentDidUpdate() {
 		this.socket.on('receive-indicator', this.receiveNote.bind(this));
 	}
 
@@ -89,8 +85,8 @@ class App extends React.Component {
 			this.setState({
 				isTyping: true
 			});
-			const sendNote = true;
-			this.socket.emit('new-typing', sendNote);
+			const sendTrue = true;
+			this.socket.emit('new-typing', sendTrue);
 		} else if(keys === ''){
 			this.setState({
 				isTyping: false

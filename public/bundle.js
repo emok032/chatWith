@@ -26487,13 +26487,8 @@
 				this.socket.on('online-user', this.onlineUser.bind(this));
 			}
 		}, {
-			key: 'shouldComponentUpdate',
-			value: function shouldComponentUpdate(nextProps, nextState) {
-				return true;
-			}
-		}, {
-			key: 'componentWillUpdate',
-			value: function componentWillUpdate() {
+			key: 'componentDidUpdate',
+			value: function componentDidUpdate() {
 				this.socket.on('receive-indicator', this.receiveNote.bind(this));
 			}
 		}, {
@@ -26556,11 +26551,9 @@
 					this.setState({
 						isTyping: true
 					});
-					var sendNote = true;
-					this.socket.emit('new-typing', sendNote);
-				}
-
-				if (keys === '') {
+					var sendTrue = true;
+					this.socket.emit('new-typing', sendTrue);
+				} else if (keys === '') {
 					this.setState({
 						isTyping: false
 					});
