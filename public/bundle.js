@@ -26460,7 +26460,9 @@
 			_this.state = {
 				status: '',
 				title: '',
-				messages: []
+				messages: [],
+				onlineUsers: [],
+				isTyping: ''
 			};
 
 			return _this;
@@ -26482,6 +26484,15 @@
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				this.socket.on('receive-message', this.receiveMsg.bind(this));
+				this.socket.on('online-user', this.onlineUser.bind(this));
+			}
+		}, {
+			key: 'onlineUser',
+			value: function onlineUser(serverState) {
+				var onlineUsers = this.state.onlineUsers;
+
+				onlineUsers.push(serverState.socketId);
+				this.setState({ onlineUsers: onlineUsers });
 			}
 
 			// Connect (handler)
@@ -26525,6 +26536,26 @@
 				console.log({ messages: messages });
 			}
 		}, {
+			key: 'onKeyChange',
+			value: function onKeyChange(event) {
+				var isTyping = this.state.isTyping;
+
+				var keys = event.target.value;
+				if (keys.length > 0) {
+					this.setState({ isTyping: true }, function () {
+						document.getElementById("typingStatus").innerHtML = "The other user is typing...";
+						console.log("Typing: " + this.state.isTyping);
+					});
+				}
+				if (event.target.value === '') {
+					this.setState({ isTyping: false }, function () {
+						document.getElementById("typingStatus").innerHTML = "Waiting for reply..";
+						console.log("Typing: " + this.state.isTyping);
+					});
+				}
+				console.log({ isTyping: isTyping });
+			}
+		}, {
 			key: 'render',
 			value: function render() {
 				var messages = this.state.messages;
@@ -26536,12 +26567,33 @@
 						msg
 					);
 				});
-				var self = this;
+				var onlineUsers = this.state.onlineUsers;
+
+				var userList = onlineUsers.map(function (user, index) {
+					return _react2.default.createElement(
+						'li',
+						{ key: index },
+						'User Online: ',
+						user
+					);
+				});
 
 				return _react2.default.createElement(
 					'div',
 					{ className: 'Application' },
 					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Online Users'
+					),
+					_react2.default.createElement(
+						'ul',
+						null,
+						'Users: ',
+						userList
+					),
+					_react2.default.createElement('h2', { id: 'typingStatus' }),
 					_react2.default.createElement(
 						'ul',
 						null,
@@ -26556,12 +26608,13 @@
 					_react2.default.createElement(
 						'form',
 						null,
-						_react2.default.createElement('input', { type: 'text', id: 'message', autoComplete: 'off' }),
+						_react2.default.createElement('input', { onChange: this.onKeyChange.bind(this), type: 'text', id: 'message', autoComplete: 'off' }),
 						_react2.default.createElement(
 							'button',
 							{ onClick: this.submitMessage.bind(this) },
 							'Send'
-						)
+						),
+						_react2.default.createElement('input', { type: 'text', id: 'user', placeholder: 'Choose Username' })
 					)
 				);
 			}

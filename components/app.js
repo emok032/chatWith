@@ -14,7 +14,9 @@ class App extends React.Component {
 		this.state = {
 			status: '',
 			title: '',
-			messages: []
+			messages: [],
+			onlineUsers: [],
+			isTyping: ''
 		};
 
 	}
@@ -27,11 +29,18 @@ class App extends React.Component {
 		// Disconnects from Socket
 		this.socket.on('disconnect', this.disconnect.bind(this));
 		// Emit 
-		this.socket.on('welcome', this.welcome.bind(this));	
+		this.socket.on('welcome', this.welcome.bind(this));
 	}
 
 	componentDidMount() {
 		this.socket.on('receive-message', this.receiveMsg.bind(this));
+		this.socket.on('online-user', this.onlineUser.bind(this));
+	}
+
+	onlineUser(serverState){
+		const { onlineUsers } = this.state;
+		onlineUsers.push(serverState.socketId);
+		this.setState({ onlineUsers: onlineUsers });
 	}
 
 	// Connect (handler)
@@ -42,7 +51,6 @@ class App extends React.Component {
 	// Disconnect (handler)
 	disconnect() {
 		this.setState({ status: 'disconnected'});
-
 	}
 	// Emit 'welcome' (handler)
 	welcome(serverState) {
@@ -61,27 +69,56 @@ class App extends React.Component {
 		const { messages } = this.state;
 	      messages.push(msg);
 	      this.setState({messages: messages});
-	      console.log({messages});
+	      console.log({ messages });
+	}
+
+	onKeyChange(event){
+		const { isTyping } = this.state;
+		const keys = event.target.value
+		if(keys.length > 0){
+			this.setState({ isTyping: true }, function(){
+				document.getElementById("typingStatus").innerHtML = ("The other user is typing...");
+				console.log("Typing: " + this.state.isTyping);
+			});
+		}
+		if(event.target.value === ''){
+			this.setState({ isTyping: false }, function(){
+				document.getElementById("typingStatus").innerHTML = ("Waiting for reply..");
+				console.log("Typing: " + this.state.isTyping);
+			});
+		}
+		console.log({isTyping});
 	}
 	render() {
 		const { messages } = this.state;
 		const msgList = messages.map((msg, index) =>
-				<li key={index}>
-					{msg}
-				</li>
+			<li key={index}>
+				{msg}
+			</li>
 		);
-		const self = this;
+		const { onlineUsers } = this.state;
+		const userList = onlineUsers.map((user, index) =>
+		<li key={index}>
+				User Online: {user}
+		</li>
+		);
 
 		return (
 			<div className="Application">
 				<Header title={this.state.title} status={this.state.status}/>
-					<ul>
-						Messages: {msgList}
-					</ul>	
+				<h2>Online Users</h2>
+				<ul>
+					Users: {userList}
+				</ul>
+				<h2 id="typingStatus"></h2>
+				<ul>
+					Messages: {msgList}
+				</ul>	
 				<h1>Chat Input</h1>
 				<form>
-						<input type="text" id="message" autoComplete="off" />
-						<button onClick={ this.submitMessage.bind(this) }>Send</button>
+						<input onChange={this.onKeyChange.bind(this)} type="text" id="message" autoComplete="off" />
+						<button onClick={ this.submitMessage.bind(this)} >Send</button>
+						<input type="text" id="user" placeholder="Choose Username" />
 				</form>
 			</div>
 			
