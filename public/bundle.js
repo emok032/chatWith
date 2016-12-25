@@ -26485,6 +26485,15 @@
 			value: function componentDidMount() {
 				this.socket.on('receive-message', this.receiveMsg.bind(this));
 				this.socket.on('online-user', this.onlineUser.bind(this));
+			}
+		}, {
+			key: 'shouldComponentUpdate',
+			value: function shouldComponentUpdate(nextProps, nextState) {
+				return true;
+			}
+		}, {
+			key: 'componentWillUpdate',
+			value: function componentWillUpdate() {
 				this.socket.on('receive-indicator', this.receiveNote.bind(this));
 			}
 		}, {
@@ -26543,18 +26552,22 @@
 
 				var keys = event.target.value;
 
-				this.setState({
-					isTyping: true
-				});
+				if (keys.length > 0) {
+					this.setState({
+						isTyping: true
+					});
+					var sendNote = true;
+					this.socket.emit('new-typing', sendNote);
+				}
 
 				if (keys === '') {
 					this.setState({
 						isTyping: false
 					});
-					console.log({ isTyping: isTyping });
+					var sendFalse = false;
+					console.log("NOT Typing: " + { isTyping: isTyping });
+					this.socket.emit('new-typing', sendFalse);
 				}
-				var sendNote = { isTyping: isTyping };
-				this.socket.emit('new-typing', sendNote);
 			}
 		}, {
 			key: 'receiveNote',
@@ -26562,7 +26575,7 @@
 				var otherIsTyping = this.state.otherIsTyping;
 
 				this.setState({ otherIsTyping: note });
-				console.log('Receive Note: ' + { otherIsTyping: otherIsTyping });
+				console.log("Receive Note: " + note);
 			}
 		}, {
 			key: 'render',

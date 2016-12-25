@@ -35,6 +35,13 @@ class App extends React.Component {
 	componentDidMount() {
 		this.socket.on('receive-message', this.receiveMsg.bind(this));
 		this.socket.on('online-user', this.onlineUser.bind(this));
+	}
+
+	shouldComponentUpdate(nextProps, nextState) {
+		return true
+	}
+
+	componentWillUpdate() {
 		this.socket.on('receive-indicator', this.receiveNote.bind(this));
 	}
 
@@ -78,24 +85,26 @@ class App extends React.Component {
 		const { isTyping } = this.state;
 		const keys = event.target.value
 
-		this.setState({
-			isTyping: true
-		});
-
-		if(keys === ''){
+		if(keys.length > 0){
+			this.setState({
+				isTyping: true
+			});
+			const sendNote = true;
+			this.socket.emit('new-typing', sendNote);
+		} else if(keys === ''){
 			this.setState({
 				isTyping: false
 			});
-			console.log({ isTyping });
-		}
-		const sendNote = {isTyping};
-		this.socket.emit('new-typing', sendNote);
+			const sendFalse = false;
+			console.log("NOT Typing: " + { isTyping });
+			this.socket.emit('new-typing', sendFalse);
+		}	
 	}
 
 	receiveNote(note){
 		const { otherIsTyping } = this.state;
 		this.setState({ otherIsTyping: note });
-		console.log('Receive Note: ' + { otherIsTyping });
+		console.log("Receive Note: " + note);
 	}
 
 	render() {
