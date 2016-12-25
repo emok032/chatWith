@@ -38,9 +38,10 @@ io.sockets.on('connection', function(socket) { // callback function handling soc
 	socket.on('new-message', function(msg){
 		io.emit('receive-message', msg);
 	});
-	socket.on('is-typing', function(event) {
-		console.log('User is typing');
-	})
+	socket.on('new-typing', function(note) {
+		io.emit('receive-indicator', note);
+		io.emit('sender-id', socket.id);
+	});
 
 	// Emit event 'welcome' --------------------------------------------------------------------------
 	socket.emit('welcome', {

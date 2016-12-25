@@ -26462,7 +26462,8 @@
 				title: '',
 				messages: [],
 				onlineUsers: [],
-				isTyping: false
+				isTyping: false,
+				otherIsTyping: false
 			};
 			return _this;
 		}
@@ -26484,6 +26485,7 @@
 			value: function componentDidMount() {
 				this.socket.on('receive-message', this.receiveMsg.bind(this));
 				this.socket.on('online-user', this.onlineUser.bind(this));
+				this.socket.on('receive-indicator', this.receiveNote.bind(this));
 			}
 		}, {
 			key: 'onlineUser',
@@ -26520,8 +26522,8 @@
 			key: 'submitMessage',
 			value: function submitMessage() {
 				var message = document.getElementById("message").value;
-				console.log('Sent: ' + message);
 				this.socket.emit('new-message', message);
+				console.log('Sent: ' + message);
 			}
 		}, {
 			key: 'receiveMsg',
@@ -26540,22 +26542,35 @@
 				var isTyping = this.state.isTyping;
 
 				var keys = event.target.value;
+
 				this.setState({
 					isTyping: true
 				});
+
 				if (keys === '') {
 					this.setState({
 						isTyping: false
 					});
 					console.log({ isTyping: isTyping });
 				}
+				var sendNote = { isTyping: isTyping };
+				this.socket.emit('new-typing', sendNote);
+			}
+		}, {
+			key: 'receiveNote',
+			value: function receiveNote(note) {
+				var otherIsTyping = this.state.otherIsTyping;
+
+				this.setState({ otherIsTyping: note });
+				console.log('Receive Note: ' + { otherIsTyping: otherIsTyping });
 			}
 		}, {
 			key: 'render',
 			value: function render() {
 				var _state = this.state,
 				    messages = _state.messages,
-				    isTyping = _state.isTyping;
+				    isTyping = _state.isTyping,
+				    otherIsTyping = _state.otherIsTyping;
 
 				var msgList = messages.map(function (msg, index) {
 					return _react2.default.createElement(
@@ -26593,8 +26608,9 @@
 					_react2.default.createElement(
 						'div',
 						{ id: 'typingStatus' },
-						'Typing: ',
-						this.state.isTyping ? 'ON' : 'OFF'
+						this.state.isTyping ? 'I am typing...' : 'I am NOT typing...',
+						_react2.default.createElement('br', null),
+						this.state.otherIsTyping ? 'Other user is typing...' : 'Other user is NOT typing...'
 					),
 					_react2.default.createElement(
 						'ul',

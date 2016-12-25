@@ -16,7 +16,8 @@ class App extends React.Component {
 			title: '',
 			messages: [],
 			onlineUsers: [],
-			isTyping: false
+			isTyping: false,
+			otherIsTyping: false
 		};
 	}
 
@@ -34,6 +35,7 @@ class App extends React.Component {
 	componentDidMount() {
 		this.socket.on('receive-message', this.receiveMsg.bind(this));
 		this.socket.on('online-user', this.onlineUser.bind(this));
+		this.socket.on('receive-indicator', this.receiveNote.bind(this));
 	}
 
 	onlineUser(serverState){
@@ -58,8 +60,9 @@ class App extends React.Component {
 
 	submitMessage(){
 		const message = document.getElementById("message").value;
-		console.log('Sent: ' + message);
 		this.socket.emit('new-message', message);
+		console.log('Sent: ' + message);
+
 	}
 
 	receiveMsg(msg){
@@ -74,19 +77,29 @@ class App extends React.Component {
 	onKeyTyping(event){
 		const { isTyping } = this.state;
 		const keys = event.target.value
+
 		this.setState({
 			isTyping: true
 		});
+
 		if(keys === ''){
 			this.setState({
-					isTyping: false
+				isTyping: false
 			});
 			console.log({ isTyping });
 		}
+		const sendNote = {isTyping};
+		this.socket.emit('new-typing', sendNote);
+	}
+
+	receiveNote(note){
+		const { otherIsTyping } = this.state;
+		this.setState({ otherIsTyping: note });
+		console.log('Receive Note: ' + { otherIsTyping });
 	}
 
 	render() {
-		const { messages, isTyping } = this.state;
+		const { messages, isTyping, otherIsTyping } = this.state;
 		const msgList = messages.map((msg, index) =>
 			<li key={index}>
 				{msg}
@@ -107,7 +120,9 @@ class App extends React.Component {
 					Users: {userList}
 				</ul>
 				<div id="typingStatus">
-					Typing: {this.state.isTyping ? 'ON' : 'OFF'}
+					{this.state.isTyping ? 'I am typing...' : 'I am NOT typing...'}
+					<br />
+					{this.state.otherIsTyping ? 'Other user is typing...' : 'Other user is NOT typing...'}
 				</div>
 				<ul>
 					Messages: {msgList}
