@@ -26462,9 +26462,8 @@
 				title: '',
 				messages: [],
 				onlineUsers: [],
-				isTyping: ''
+				isTyping: false
 			};
-
 			return _this;
 		}
 
@@ -26536,29 +26535,27 @@
 				console.log({ messages: messages });
 			}
 		}, {
-			key: 'onKeyChange',
-			value: function onKeyChange(event) {
+			key: 'onKeyTyping',
+			value: function onKeyTyping(event) {
 				var isTyping = this.state.isTyping;
 
 				var keys = event.target.value;
-				if (keys.length > 0) {
-					this.setState({ isTyping: true }, function () {
-						document.getElementById("typingStatus").innerHtML = "The other user is typing...";
-						console.log("Typing: " + this.state.isTyping);
+				this.setState({
+					isTyping: true
+				});
+				if (keys === '') {
+					this.setState({
+						isTyping: false
 					});
+					console.log({ isTyping: isTyping });
 				}
-				if (event.target.value === '') {
-					this.setState({ isTyping: false }, function () {
-						document.getElementById("typingStatus").innerHTML = "Waiting for reply..";
-						console.log("Typing: " + this.state.isTyping);
-					});
-				}
-				console.log({ isTyping: isTyping });
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var messages = this.state.messages;
+				var _state = this.state,
+				    messages = _state.messages,
+				    isTyping = _state.isTyping;
 
 				var msgList = messages.map(function (msg, index) {
 					return _react2.default.createElement(
@@ -26593,7 +26590,12 @@
 						'Users: ',
 						userList
 					),
-					_react2.default.createElement('h2', { id: 'typingStatus' }),
+					_react2.default.createElement(
+						'div',
+						{ id: 'typingStatus' },
+						'Typing: ',
+						this.state.isTyping ? 'ON' : 'OFF'
+					),
 					_react2.default.createElement(
 						'ul',
 						null,
@@ -26608,7 +26610,7 @@
 					_react2.default.createElement(
 						'form',
 						null,
-						_react2.default.createElement('input', { onChange: this.onKeyChange.bind(this), type: 'text', id: 'message', autoComplete: 'off' }),
+						_react2.default.createElement('input', { onChange: this.onKeyTyping.bind(this), type: 'text', id: 'message', autoComplete: 'off' }),
 						_react2.default.createElement(
 							'button',
 							{ onClick: this.submitMessage.bind(this) },

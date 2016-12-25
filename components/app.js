@@ -16,9 +16,8 @@ class App extends React.Component {
 			title: '',
 			messages: [],
 			onlineUsers: [],
-			isTyping: ''
+			isTyping: false
 		};
-
 	}
 
 	componentWillMount() {
@@ -72,25 +71,22 @@ class App extends React.Component {
 	      console.log({ messages });
 	}
 
-	onKeyChange(event){
+	onKeyTyping(event){
 		const { isTyping } = this.state;
 		const keys = event.target.value
-		if(keys.length > 0){
-			this.setState({ isTyping: true }, function(){
-				document.getElementById("typingStatus").innerHtML = ("The other user is typing...");
-				console.log("Typing: " + this.state.isTyping);
+		this.setState({
+			isTyping: true
+		});
+		if(keys === ''){
+			this.setState({
+					isTyping: false
 			});
+			console.log({ isTyping });
 		}
-		if(event.target.value === ''){
-			this.setState({ isTyping: false }, function(){
-				document.getElementById("typingStatus").innerHTML = ("Waiting for reply..");
-				console.log("Typing: " + this.state.isTyping);
-			});
-		}
-		console.log({isTyping});
 	}
+
 	render() {
-		const { messages } = this.state;
+		const { messages, isTyping } = this.state;
 		const msgList = messages.map((msg, index) =>
 			<li key={index}>
 				{msg}
@@ -110,13 +106,15 @@ class App extends React.Component {
 				<ul>
 					Users: {userList}
 				</ul>
-				<h2 id="typingStatus"></h2>
+				<div id="typingStatus">
+					Typing: {this.state.isTyping ? 'ON' : 'OFF'}
+				</div>
 				<ul>
 					Messages: {msgList}
 				</ul>	
 				<h1>Chat Input</h1>
 				<form>
-						<input onChange={this.onKeyChange.bind(this)} type="text" id="message" autoComplete="off" />
+						<input onChange={this.onKeyTyping.bind(this)} type="text" id="message" autoComplete="off" />
 						<button onClick={ this.submitMessage.bind(this)} >Send</button>
 						<input type="text" id="user" placeholder="Choose Username" />
 				</form>
