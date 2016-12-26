@@ -35,18 +35,19 @@ class App extends React.Component {
 
 	componentDidMount() {
 		this.socket.on('receive-message', this.receiveMsg.bind(this));
-		this.socket.on('online-user', this.onlineUser.bind(this));
+		this.socket.on('online-users', this.onlineUsers.bind(this));
 	}
 
 	componentWillUpdate() {
 		this.socket.on('receive-indicator', this.receiveNote.bind(this));
-		// this.socket.on('sender-id', this.senderId.bind(this));
 	}
 
-	onlineUser(serverState)	{
-		const { onlineUsers } = this.state;
-		onlineUsers.push(serverState.socketId);
-		this.setState({ onlineUsers: onlineUsers });
+	onlineUsers(serverState)	{
+		this.setState({ onlineUsers: serverState.onlineUsers });
+	}
+
+	receiveToggle(toggle) {
+		this.setState({ onlineUsers})
 	}
 
 	senderId(socketId){
@@ -68,6 +69,7 @@ class App extends React.Component {
 	// Disconnect (handler)
 	disconnect() {
 		this.setState({ status: 'disconnected'});
+		socket.emit('toggle-online');
 	}
 	// Emit 'welcome' (handler)
 	welcome(serverState) {
@@ -148,7 +150,11 @@ class App extends React.Component {
 		);
 
 		return (
-			<div className="Application">
+			<div className="container">
+			    <div className="row">
+			        <div className="col-md-5">
+			            <div className="panel panel-primary">
+			                <div className="panel-heading">
 				<Header title={this.state.title} status={this.state.status}/>
 				<h2>Online Users</h2>
 				<ul>
@@ -171,6 +177,10 @@ class App extends React.Component {
 						<button onClick={ this.submitMessage.bind(this)} >Send</button>
 						<input type="text" id="user" placeholder="Choose Username" />
 				</form>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 			
 		);
