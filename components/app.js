@@ -157,8 +157,10 @@ class App extends React.Component {
 				<div id="typingStatus">
 					{this.state.isTyping ? 'I am typing...' : 'I am NOT typing...'}
 					<br />
-					<h2>{this.state.userId}</h2>
-					{this.state.otherIsTyping ? 'is typing...' : 'is NOT typing...'}
+					<p>
+						
+						"{this.state.userId}" {this.state.otherIsTyping ? ' is typing...' : ''}
+					</p>
 				</div>
 				<ul>
 					Messages: {msgList}

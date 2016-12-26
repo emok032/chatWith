@@ -26654,11 +26654,13 @@
 						this.state.isTyping ? 'I am typing...' : 'I am NOT typing...',
 						_react2.default.createElement('br', null),
 						_react2.default.createElement(
-							'h2',
+							'p',
 							null,
-							this.state.userId
-						),
-						this.state.otherIsTyping ? 'is typing...' : 'is NOT typing...'
+							'"',
+							this.state.userId,
+							'" ',
+							this.state.otherIsTyping ? ' is typing...' : ''
+						)
 					),
 					_react2.default.createElement(
 						'ul',
