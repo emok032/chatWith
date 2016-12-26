@@ -37,7 +37,7 @@ class App extends React.Component {
 		this.socket.on('online-user', this.onlineUser.bind(this));
 	}
 
-	componentDidUpdate() {
+	componentWillUpdate() {
 		this.socket.on('receive-indicator', this.receiveNote.bind(this));
 	}
 
@@ -62,7 +62,7 @@ class App extends React.Component {
 	}
 
 	submitMessage(){
-		const message = document.getElementById("message").value;
+		const message = document.getElementById('message').value;
 		this.socket.emit('new-message', message);
 		console.log('Sent: ' + message);
 
@@ -79,22 +79,25 @@ class App extends React.Component {
 
 	onKeyTyping(event){
 		const { isTyping } = this.state;
-		const keys = event.target.value
+		const keys = event.target.value;
+		const keysLength = keys.length;
 
-		if(keys.length > 0){
+		if(keysLength === 1 && keysLength < 2) {
 			this.setState({
 				isTyping: true
 			});
 			const sendTrue = true;
 			this.socket.emit('new-typing', sendTrue);
-		} else if(keys === ''){
+			console.log("User is typing: " + { isTyping });
+
+		} else if(keysLength === 0){
 			this.setState({
 				isTyping: false
 			});
 			const sendFalse = false;
-			console.log("NOT Typing: " + { isTyping });
+			console.log("NOT typing: " + { isTyping });
 			this.socket.emit('new-typing', sendFalse);
-		}	
+		}
 	}
 
 	receiveNote(note){

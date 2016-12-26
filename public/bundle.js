@@ -26487,8 +26487,8 @@
 				this.socket.on('online-user', this.onlineUser.bind(this));
 			}
 		}, {
-			key: 'componentDidUpdate',
-			value: function componentDidUpdate() {
+			key: 'componentWillUpdate',
+			value: function componentWillUpdate() {
 				this.socket.on('receive-indicator', this.receiveNote.bind(this));
 			}
 		}, {
@@ -26525,7 +26525,7 @@
 		}, {
 			key: 'submitMessage',
 			value: function submitMessage() {
-				var message = document.getElementById("message").value;
+				var message = document.getElementById('message').value;
 				this.socket.emit('new-message', message);
 				console.log('Sent: ' + message);
 			}
@@ -26546,19 +26546,21 @@
 				var isTyping = this.state.isTyping;
 
 				var keys = event.target.value;
+				var keysLength = keys.length;
 
-				if (keys.length > 0) {
+				if (keysLength === 1 && keysLength < 2) {
 					this.setState({
 						isTyping: true
 					});
 					var sendTrue = true;
 					this.socket.emit('new-typing', sendTrue);
-				} else if (keys === '') {
+					console.log("User is typing: " + { isTyping: isTyping });
+				} else if (keysLength === 0) {
 					this.setState({
 						isTyping: false
 					});
 					var sendFalse = false;
-					console.log("NOT Typing: " + { isTyping: isTyping });
+					console.log("NOT typing: " + { isTyping: isTyping });
 					this.socket.emit('new-typing', sendFalse);
 				}
 			}
