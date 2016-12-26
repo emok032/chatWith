@@ -3,8 +3,6 @@ import React, { Component, cloneElement } from 'react';
 import { Router, Route, hashHistory } from 'react-router';
 import io from 'socket.io-client';
 import Header from './parts/header';
-import Buyers from './Buyers';
-import Seller from './Seller';
 
 class App extends React.Component {
 	// (1) Load App >> (2) Connect to Socket
@@ -69,7 +67,7 @@ class App extends React.Component {
 	// Disconnect (handler)
 	disconnect() {
 		this.setState({ status: 'disconnected'});
-		socket.emit('toggle-online');
+		this.socket.emit('toggle-online');
 	}
 	// Emit 'welcome' (handler)
 	welcome(serverState) {
@@ -80,6 +78,7 @@ class App extends React.Component {
 		const message = document.getElementById('message').value;
 		this.socket.emit('new-message', message);
 		console.log('Sent: ' + message);
+		document.getElementById('message').value = '';
 	}
 
 	receiveMsg(msg){
@@ -155,28 +154,28 @@ class App extends React.Component {
 			        <div className="col-md-5">
 			            <div className="panel panel-primary">
 			                <div className="panel-heading">
-				<Header title={this.state.title} status={this.state.status}/>
-				<h2>Online Users</h2>
-				<ul>
-					Users: {userList}
-				</ul>
-				<div id="typingStatus">
-					{this.state.isTyping ? 'I am typing...' : 'I am NOT typing...'}
-					<br />
-					<p>
-						
-						"{this.state.userId}" {this.state.otherIsTyping ? ' is typing...' : ''}
-					</p>
-				</div>
-				<ul>
-					Messages: {msgList}
-				</ul>	
-				<h1>Chat Input</h1>
-				<form>
-						<input onChange={this.onKeyTyping.bind(this)} type="text" id="message" autoComplete="off" />
-						<button onClick={ this.submitMessage.bind(this)} >Send</button>
-						<input type="text" id="user" placeholder="Choose Username" />
-				</form>
+								<Header title={this.state.title} status={this.state.status}/>
+								<h2>Online Users</h2>
+								<ul>
+									Users: {userList}
+								</ul>
+								<div id="typingStatus">
+									{this.state.isTyping ? 'I am typing...' : 'I am NOT typing...'}
+									<br />
+									<p>
+										
+										"{this.state.userId}" {this.state.otherIsTyping ? ' is typing...' : ''}
+									</p>
+								</div>
+								<ul>
+									Messages: {msgList}
+								</ul>	
+								<h1>Chat Input</h1>
+								<form>
+										<input onChange={this.onKeyTyping.bind(this)} type="text" id="message" autoComplete="off" />
+										<button onClick={ this.submitMessage.bind(this)} >Send</button>
+										<input type="text" id="user" placeholder="Choose Username" />
+								</form>
 							</div>
 						</div>
 					</div>
