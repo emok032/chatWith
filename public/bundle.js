@@ -26463,7 +26463,8 @@
 				messages: [],
 				onlineUsers: [],
 				isTyping: false,
-				otherIsTyping: false
+				otherIsTyping: false,
+				userId: ''
 			};
 			return _this;
 		}
@@ -26490,6 +26491,7 @@
 			key: 'componentWillUpdate',
 			value: function componentWillUpdate() {
 				this.socket.on('receive-indicator', this.receiveNote.bind(this));
+				// this.socket.on('sender-id', this.senderId.bind(this));
 			}
 		}, {
 			key: 'onlineUser',
@@ -26498,6 +26500,21 @@
 
 				onlineUsers.push(serverState.socketId);
 				this.setState({ onlineUsers: onlineUsers });
+			}
+		}, {
+			key: 'senderId',
+			value: function senderId(socketId) {
+				var _state = this.state,
+				    userId = _state.userId,
+				    isTyping = _state.isTyping;
+
+				this.setState({ userId: socketId });
+
+				if ({ isTyping: isTyping } === true) {
+					this.setState({ userId: socketId });
+				} else if ({ isTyping: isTyping } === false) {
+					this.setState({ userId: '' });
+				}
 			}
 
 			// Connect (handler)
@@ -26547,38 +26564,56 @@
 
 				var keys = event.target.value;
 				var keysLength = keys.length;
-
-				if (keysLength === 1 && keysLength < 2) {
-					this.setState({
-						isTyping: true
-					});
-					var sendTrue = true;
-					this.socket.emit('new-typing', sendTrue);
-					console.log("User is typing: " + { isTyping: isTyping });
-				} else if (keysLength === 0) {
+				var i = 0;
+				// for-loop: To prevent non-stop requests to server as user types (as key.length increases)
+				for (i = 0; i < 1; i++) {
+					if (keysLength === 1) {
+						this.setState({
+							isTyping: true
+						});
+						var sendTrue = true;
+						this.socket.emit('new-typing', sendTrue);
+						console.log("User is typing: " + { isTyping: isTyping });
+					}
+				}
+				if (keys === '') {
 					this.setState({
 						isTyping: false
 					});
 					var sendFalse = false;
 					console.log("NOT typing: " + { isTyping: isTyping });
 					this.socket.emit('new-typing', sendFalse);
+					i = 0;
 				}
 			}
 		}, {
 			key: 'receiveNote',
-			value: function receiveNote(note) {
-				var otherIsTyping = this.state.otherIsTyping;
+			value: function receiveNote(note, socketId) {
+				var _state2 = this.state,
+				    otherIsTyping = _state2.otherIsTyping,
+				    userId = _state2.userId;
 
-				this.setState({ otherIsTyping: note });
+				var username = socketId;
+				if (note === true) {
+					this.setState({
+						otherIsTyping: true,
+						userId: username
+					});
+				} else {
+					this.setState({
+						otherIsTyping: false,
+						userId: ''
+					});
+				}
 				console.log("Receive Note: " + note);
 			}
 		}, {
 			key: 'render',
 			value: function render() {
-				var _state = this.state,
-				    messages = _state.messages,
-				    isTyping = _state.isTyping,
-				    otherIsTyping = _state.otherIsTyping;
+				var _state3 = this.state,
+				    messages = _state3.messages,
+				    isTyping = _state3.isTyping,
+				    otherIsTyping = _state3.otherIsTyping;
 
 				var msgList = messages.map(function (msg, index) {
 					return _react2.default.createElement(
@@ -26618,7 +26653,12 @@
 						{ id: 'typingStatus' },
 						this.state.isTyping ? 'I am typing...' : 'I am NOT typing...',
 						_react2.default.createElement('br', null),
-						this.state.otherIsTyping ? 'Other user is typing...' : 'Other user is NOT typing...'
+						_react2.default.createElement(
+							'h2',
+							null,
+							this.state.userId
+						),
+						this.state.otherIsTyping ? 'is typing...' : 'is NOT typing...'
 					),
 					_react2.default.createElement(
 						'ul',
