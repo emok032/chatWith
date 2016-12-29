@@ -26502,7 +26502,11 @@
 			key: 'disconnect',
 			value: function disconnect() {
 				this.setState({ status: 'disconnected' });
+<<<<<<< HEAD
 				this.socket.emit('toggle-online');
+=======
+				socket.emit('toggle-online');
+>>>>>>> de66faf3ac698053b76cdb087264f01cf7be0612
 			}
 			// Emit 'welcome' (handler)
 

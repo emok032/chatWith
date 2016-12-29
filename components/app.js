@@ -42,6 +42,13 @@ class App extends React.Component {
 
 	onlineUsers(serverState)	{
 		this.setState({ onlineUsers: serverState.onlineUsers });
+<<<<<<< HEAD
+=======
+	}
+
+	receiveToggle(toggle) {
+		this.setState({ onlineUsers})
+>>>>>>> de66faf3ac698053b76cdb087264f01cf7be0612
 	}
 
 	receiveToggle(toggle) {
@@ -67,7 +74,6 @@ class App extends React.Component {
 	// Disconnect (handler)
 	disconnect() {
 		this.setState({ status: 'disconnected'});
-		this.socket.emit('toggle-online');
 	}
 	// Emit 'welcome' (handler)
 	welcome(serverState) {
