@@ -4,8 +4,9 @@ var app = express();
 
 // Tracking Socket (Connection)
 var connections = [];
-var title = 'title placeholder';
+var title = 'ChatWith';
 var socketId = '';
+var onlineUsers = [];
 
 // Middleware ========================================================================================
 app.use(express.static('./public')); // serve files from static folder ('public')
@@ -22,16 +23,23 @@ io.sockets.on('connection', function(socket) { // callback function handling soc
 	socket.once('disconnect', function() {
 		// Remove disconnected socket from connections array
 		connections.splice(connections.indexOf(socket), 1); // removing '1' socket at a time
-		// client may have disconnected socket *but server has not fully yet
-		socket.disconnect(); // invoke server disconnect
-		// Connections left
-		console.log('Disconnected: %s sockets still connected', connections.length);
-		// Remove disconnected socketId from socketId array
-		// socketId.splice(socket.id, 1);
-		// socket.emit('online-user', {
-		// 	socketId: socketId
-		// });
-		// console.log('Disconnected - onlineUser: ', socketId);
+
+		onlineUsers.splice(onlineUsers.indexOf(socket.id), 1);
+		// Update application state of disconnected users
+		socket.on('toggle-online', function() {
+			// callback function to send updated array of connected users
+			io.emit('online-users', {
+				onlineUsers: onlineUsers
+			})
+		});
+		console.log("Disconnected-onlineUsers: ", onlineUsers);
+
+		// Client may have disconnected socket but server has not fully yet
+		// So, actively invoke server disconnect
+		socket.disconnect();
+		// Connections still left
+		console.log('A socket(s) Disconnected: %s sockets still connected', connections.length);
+
 	});
 
 	socket.on('new-message', function(msg){
@@ -59,13 +67,13 @@ io.sockets.on('connection', function(socket) { // callback function handling soc
 	// Upon Connect to Socket ------------------------------------------------------------------------
 	connections.push(socket);
 	// Connections currently
-	console.log("Connected: %s sockets connected", connections.length, socket.id);
-	
-	// socketId.push(socket.id);
-	// socket.emit('online-user', {
-	// 	socketId: socketId
-	// });
-	// console.log(socketId);
+	console.log("A socket has connected: %s sockets connected", connections.length, socket.id);
+
+	// Update application state with current online users
+	onlineUsers.push(socket.id);
+	socket.emit('online-users', {
+		onlineUsers: onlineUsers
+	});
 });	
 
 console.log("Polling server is running at 'http://localhost:3000'");

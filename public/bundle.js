@@ -26485,20 +26485,21 @@
 			key: 'componentDidMount',
 			value: function componentDidMount() {
 				this.socket.on('receive-message', this.receiveMsg.bind(this));
-				this.socket.on('online-user', this.onlineUser.bind(this));
+				this.socket.on('online-users', this.onlineUsers.bind(this));
 			}
 		}, {
 			key: 'componentWillUpdate',
 			value: function componentWillUpdate() {
 				this.socket.on('receive-indicator', this.receiveNote.bind(this));
-				// this.socket.on('sender-id', this.senderId.bind(this));
 			}
 		}, {
-			key: 'onlineUser',
-			value: function onlineUser(serverState) {
-				var onlineUsers = this.state.onlineUsers;
-
-				onlineUsers.push(serverState.socketId);
+			key: 'onlineUsers',
+			value: function onlineUsers(serverState) {
+				this.setState({ onlineUsers: serverState.onlineUsers });
+			}
+		}, {
+			key: 'receiveToggle',
+			value: function receiveToggle(toggle) {
 				this.setState({ onlineUsers: onlineUsers });
 			}
 		}, {
@@ -26531,6 +26532,7 @@
 			key: 'disconnect',
 			value: function disconnect() {
 				this.setState({ status: 'disconnected' });
+				socket.emit('toggle-online');
 			}
 			// Emit 'welcome' (handler)
 
@@ -26635,54 +26637,70 @@
 
 				return _react2.default.createElement(
 					'div',
-					{ className: 'Application' },
-					_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
-					_react2.default.createElement(
-						'h2',
-						null,
-						'Online Users'
-					),
-					_react2.default.createElement(
-						'ul',
-						null,
-						'Users: ',
-						userList
-					),
+					{ className: 'container' },
 					_react2.default.createElement(
 						'div',
-						{ id: 'typingStatus' },
-						this.state.isTyping ? 'I am typing...' : 'I am NOT typing...',
-						_react2.default.createElement('br', null),
+						{ className: 'row' },
 						_react2.default.createElement(
-							'p',
-							null,
-							'"',
-							this.state.userId,
-							'" ',
-							this.state.otherIsTyping ? ' is typing...' : ''
+							'div',
+							{ className: 'col-md-5' },
+							_react2.default.createElement(
+								'div',
+								{ className: 'panel panel-primary' },
+								_react2.default.createElement(
+									'div',
+									{ className: 'panel-heading' },
+									_react2.default.createElement(_header2.default, { title: this.state.title, status: this.state.status }),
+									_react2.default.createElement(
+										'h2',
+										null,
+										'Online Users'
+									),
+									_react2.default.createElement(
+										'ul',
+										null,
+										'Users: ',
+										userList
+									),
+									_react2.default.createElement(
+										'div',
+										{ id: 'typingStatus' },
+										this.state.isTyping ? 'I am typing...' : 'I am NOT typing...',
+										_react2.default.createElement('br', null),
+										_react2.default.createElement(
+											'p',
+											null,
+											'"',
+											this.state.userId,
+											'" ',
+											this.state.otherIsTyping ? ' is typing...' : ''
+										)
+									),
+									_react2.default.createElement(
+										'ul',
+										null,
+										'Messages: ',
+										msgList
+									),
+									_react2.default.createElement(
+										'h1',
+										null,
+										'Chat Input'
+									),
+									_react2.default.createElement(
+										'form',
+										null,
+										_react2.default.createElement('input', { onChange: this.onKeyTyping.bind(this), type: 'text', id: 'message', autoComplete: 'off' }),
+										_react2.default.createElement(
+											'button',
+											{ onClick: this.submitMessage.bind(this) },
+											'Send'
+										),
+										_react2.default.createElement('input', { type: 'text', id: 'user', placeholder: 'Choose Username' })
+									)
+								)
+							)
 						)
-					),
-					_react2.default.createElement(
-						'ul',
-						null,
-						'Messages: ',
-						msgList
-					),
-					_react2.default.createElement(
-						'h1',
-						null,
-						'Chat Input'
-					),
-					_react2.default.createElement(
-						'form',
-						null,
-						_react2.default.createElement('input', { onChange: this.onKeyTyping.bind(this), type: 'text', id: 'message', autoComplete: 'off' }),
-						_react2.default.createElement(
-							'button',
-							{ onClick: this.submitMessage.bind(this) },
-							'Send'
-						),
-						_react2.default.createElement('input', { type: 'text', id: 'user', placeholder: 'Choose Username' })
 					)
 				);
 			}
