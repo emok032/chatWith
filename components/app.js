@@ -101,8 +101,8 @@ class App extends React.Component {
 		if(keysLength === 1) {
 			this.setState({
 				isTyping: true
-				i = 1;
 			});
+			i = 1;
 		} else if(keys === '') {
 			this.setState({
 				isTyping: false
