@@ -48,16 +48,16 @@ class App extends React.Component {
 		this.setState({ onlineUsers})
 	}
 
-	senderId(socketId){
-		const { userId, isTyping } = this.state;
-		this.setState({ userId: socketId });
+	// senderId(socketId){
+	// 	const { userId, isTyping } = this.state;
+	// 	this.setState({ userId: socketId });
 
-		if({isTyping} === true) {
-			this.setState({ userId: socketId });
-		} else if({isTyping} === false) {
-			this.setState({ userId: '' });
-		}
-	}
+	// 	if({isTyping} === true) {
+	// 		this.setState({ userId: socketId });
+	// 	} else if({isTyping} === false) {
+	// 		this.setState({ userId: '' });
+	// 	}
+	// }
 
 	// Connect (handler)
 	connect() {
@@ -78,7 +78,6 @@ class App extends React.Component {
 		const message = document.getElementById('message').value;
 		this.socket.emit('new-message', message);
 		console.log('Sent: ' + message);
-		document.getElementById('message').value = '';
 	}
 
 	receiveMsg(msg){
@@ -95,18 +94,13 @@ class App extends React.Component {
 		const keys = event.target.value;
 		const keysLength = keys.length;
 		var i = 0;
-		// for-loop: To prevent non-stop requests to server as user types (as key.length increases)
-		for (i = 0; i < 1; i++) {
-			if(keysLength === 1) {
+		// If a key is typed (at all or not)...
+		if(keysLength === 1) {
 			this.setState({
 				isTyping: true
+				i = 1;
 			});
-			const sendTrue = true;
-			this.socket.emit('new-typing', sendTrue);
-			console.log("User is typing: " + { isTyping });
-			}
-		}
-		if(keys === ''){
+		} else if(keys === '') {
 			this.setState({
 				isTyping: false
 			});
@@ -115,6 +109,14 @@ class App extends React.Component {
 			this.socket.emit('new-typing', sendFalse);
 			i = 0;
 		}
+
+		if(i === 1) {
+			const sendTrue = true;
+			this.socket.emit('new-typing', sendTrue);
+			console.log("User is typing: " + { isTyping });
+		}
+
+		document.getElementById('message').value = 0;
 	}
 
 	receiveNote(note, socketId){
@@ -174,7 +176,6 @@ class App extends React.Component {
 								<form>
 										<input onChange={this.onKeyTyping.bind(this)} type="text" id="message" autoComplete="off" />
 										<button onClick={ this.submitMessage.bind(this)} >Send</button>
-										<input type="text" id="user" placeholder="Choose Username" />
 								</form>
 							</div>
 						</div>

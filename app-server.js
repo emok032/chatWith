@@ -1,6 +1,7 @@
 // Express Configuration =============================================================================
 var express = require('express');
 var app = express();
+var path = require('path');
 
 // Tracking Socket (Connection)
 var connections = [];
@@ -12,7 +13,13 @@ var onlineUsers = [];
 app.use(express.static('./public')); // serve files from static folder ('public')
 app.use(express.static('./node_modules/bootstrap/dist'));
 
-var server = app.listen(3000);
+var server = app.listen(process.env.PORT || 3000, function(){
+  console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
+});
+
+app.get('/', function(req, res) {
+	res.sendFile(path.join(__dirname, './public/index.html'));
+})
 
 // Socket API ========================================================================================
 // Incorporating socket.io to returned server
@@ -47,15 +54,12 @@ io.sockets.on('connection', function(socket) { // callback function handling soc
 	});
 	socket.on('new-typing', function(note) {
 		const socketId = socket.id;
-		var i = 0;
-		for (i = 0; i < 1; i++) {
-			if(note === true){
+		if(note === true){
 				io.emit('receive-indicator', note, socketId);
 			}
-		}
+		
 		if (note === false){
 				io.emit('receive-indicator', note, socketId);
-				i = 0;
 			}
 	});
 
