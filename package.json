@@ -2,7 +2,7 @@
   "name": "chatwith-app",
   "version": "1.0.0",
   "description": "Polling App feat. ReactJS, Node.js, Express, and Socket.io",
-  "main": "index.js",
+  "main": "app-client.js",
   "scripts": {
     "prestart": "webpack",
     "start": "node app-server.js",
